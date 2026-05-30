@@ -1,0 +1,169 @@
+import streamlit as st
+import pandas as pd
+
+# ── Configuración de página ──────────────────────────────────────────────────
+st.set_page_config(
+    page_title="Simulador de Ventas · Gira M19",
+    page_icon="🍷",
+    layout="wide",
+)
+
+# ── Datos de productos ───────────────────────────────────────────────────────
+PRODUCTOS = [
+    {"Categoría": "Vino",         "Descripción": "Toia/blen",           "Presentación": "Gama media",       "Costo": 6500,  "Precio Venta": 11500, "Margen": 5000},
+    {"Categoría": "Vino",         "Descripción": "Gran Toia",           "Presentación": "Gama alta",        "Costo": 10000, "Precio Venta": 20000, "Margen": 10000},
+    {"Categoría": "Cerveza",      "Descripción": "Peroni",              "Presentación": "Gama alta",        "Costo": 2500,  "Precio Venta": 4500,  "Margen": 2000},
+    {"Categoría": "Aceite de oliva","Descripción": "Oda",               "Presentación": "Vidrio 1/2 litro", "Costo": 7500,  "Precio Venta": 14000, "Margen": 6500},
+    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "12 unidades",      "Costo": 11378, "Precio Venta": 20000, "Margen": 8622},
+    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "10 u. en bolsita", "Costo": 7375,  "Precio Venta": 11800, "Margen": 4425},
+    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "6 unidades",       "Costo": 6040,  "Precio Venta": 10600, "Margen": 4560},
+    {"Categoría": "Alfajores",    "Descripción": "Barritas cereal Prot","Presentación": "Unidad",           "Costo": 982,   "Precio Venta": 1600,  "Margen": 618},
+    {"Categoría": "Alfajores",    "Descripción": "Barritas cereal",     "Presentación": "Unidad",           "Costo": 682,   "Precio Venta": 1200,  "Margen": 518},
+    {"Categoría": "Aceitunas",    "Descripción": "Aceitunas Verdes",    "Presentación": "Env. 1/2",         "Costo": 9286,  "Precio Venta": 13500, "Margen": 4214},
+    {"Categoría": "Aceitunas",    "Descripción": "Aceitunas Negras",    "Presentación": "Env. 1/2",         "Costo": 10500, "Precio Venta": 15900, "Margen": 5400},
+]
+
+df_base = pd.DataFrame(PRODUCTOS)
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+def fmt_ars(v):
+    """Formato ARS: $ 1.234.567"""
+    return f"$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+def fmt_usd(v):
+    """Formato USD: U$S 1.234"""
+    return f"U$S {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+# ── Header ───────────────────────────────────────────────────────────────────
+st.title("🍷 Simulador de Ventas · Gira M19")
+st.markdown("Estimá cuántas unidades vas a vender de cada producto y calculá tus ganancias al instante.")
+st.divider()
+
+# ── Cotización USD ───────────────────────────────────────────────────────────
+col_usd, _ = st.columns([1, 3])
+with col_usd:
+    tipo_cambio = st.number_input(
+        "💵 Cotización USD → ARS",
+        min_value=1.0,
+        value=1200.0,
+        step=10.0,
+        format="%.2f",
+        help="Ingresá el tipo de cambio para ver los totales también en dólares",
+    )
+st.divider()
+
+# ── Tabla de productos con cantidades ────────────────────────────────────────
+st.subheader("📦 Productos — Cargá las cantidades estimadas")
+
+cantidades = {}
+categorias = df_base["Categoría"].unique()
+
+for cat in categorias:
+    with st.expander(f"**{cat}**", expanded=True):
+        df_cat = df_base[df_base["Categoría"] == cat].reset_index(drop=True)
+
+        header = st.columns([2.5, 2, 1.2, 1.2, 1.3, 1])
+        header[0].markdown("**Descripción**")
+        header[1].markdown("**Presentación**")
+        header[2].markdown("**Costo**")
+        header[3].markdown("**Precio venta**")
+        header[4].markdown("**Margen unit.**")
+        header[5].markdown("**Cantidad**")
+
+        for _, row in df_cat.iterrows():
+            key = f"{row['Categoría']}|{row['Descripción']}|{row['Presentación']}"
+            c0, c1, c2, c3, c4, c5 = st.columns([2.5, 2, 1.2, 1.2, 1.3, 1])
+            c0.write(row["Descripción"])
+            c1.write(row["Presentación"])
+            c2.write(fmt_ars(row["Costo"]))
+            c3.write(fmt_ars(row["Precio Venta"]))
+            margen_pct = row["Margen"] / row["Precio Venta"] * 100
+            c4.write(f"{fmt_ars(row['Margen'])}  ({margen_pct:.0f}%)")
+            cantidad = c5.number_input(
+                label="Cantidad",
+                min_value=0,
+                value=0,
+                step=1,
+                key=key,
+                label_visibility="collapsed",
+            )
+            cantidades[key] = {"cantidad": cantidad, "row": row}
+
+st.divider()
+
+# ── Cálculo de resultados ────────────────────────────────────────────────────
+resultados = []
+for key, data in cantidades.items():
+    q = data["cantidad"]
+    row = data["row"]
+    if q > 0:
+        resultados.append({
+            "Categoría":    row["Categoría"],
+            "Descripción":  row["Descripción"],
+            "Presentación": row["Presentación"],
+            "Cantidad":     q,
+            "Costo Total":  row["Costo"] * q,
+            "Venta Total":  row["Precio Venta"] * q,
+            "Ganancia":     row["Margen"] * q,
+        })
+
+total_costo  = sum(r["Costo Total"] for r in resultados)
+total_venta  = sum(r["Venta Total"] for r in resultados)
+total_margen = sum(r["Ganancia"]    for r in resultados)
+
+# ── Métricas resumen ─────────────────────────────────────────────────────────
+st.subheader("📊 Resumen de la simulación")
+
+m1, m2, m3, m4 = st.columns(4)
+
+m1.metric(
+    "💰 Venta Total",
+    fmt_ars(total_venta),
+    delta=fmt_usd(total_venta / tipo_cambio) if tipo_cambio > 0 else None,
+    delta_color="off",
+)
+m2.metric(
+    "📦 Costo Total",
+    fmt_ars(total_costo),
+    delta=fmt_usd(total_costo / tipo_cambio) if tipo_cambio > 0 else None,
+    delta_color="off",
+)
+m3.metric(
+    "✅ Ganancia Neta",
+    fmt_ars(total_margen),
+    delta=fmt_usd(total_margen / tipo_cambio) if tipo_cambio > 0 else None,
+)
+margen_pct_total = (total_margen / total_venta * 100) if total_venta > 0 else 0
+m4.metric(
+    "📈 Margen %",
+    f"{margen_pct_total:.1f} %",
+)
+
+# ── Detalle por producto ─────────────────────────────────────────────────────
+if resultados:
+    st.divider()
+    st.subheader("🔍 Detalle por producto")
+
+    df_res = pd.DataFrame(resultados)
+
+    df_display = df_res.copy()
+    for col in ["Costo Total", "Venta Total", "Ganancia"]:
+        df_display[col] = df_res[col].apply(fmt_ars)
+
+    st.dataframe(df_display, use_container_width=True, hide_index=True)
+
+    # ── Gráfico de ganancia por producto ─────────────────────────────────────
+    st.divider()
+    st.subheader("📉 Ganancia por producto")
+
+    df_chart = df_res.copy()
+    df_chart["Producto"] = df_chart["Descripción"] + " — " + df_chart["Presentación"]
+    df_chart = df_chart.set_index("Producto")[["Ganancia"]]
+    st.bar_chart(df_chart, y_label="Ganancia (ARS)", use_container_width=True)
+
+else:
+    st.info("👆 Ingresá las cantidades estimadas arriba para ver los resultados de la simulación.")
+
+# ── Footer ───────────────────────────────────────────────────────────────────
+st.divider()
+st.caption("Gira M19 · Simulador de ganancias · Datos: Ventas junio 2026")
