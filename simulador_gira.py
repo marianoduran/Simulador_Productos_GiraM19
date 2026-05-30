@@ -57,7 +57,31 @@ def fmt_usd(v):
     return f"U$S {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 # ── Header ───────────────────────────────────────────────────────────────────
-st.title("🍷 Simulador de Ventas · Gira M19")
+LOGO_SVG = """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" width="340" height="80">
+  <!-- Wine glass -->
+  <g transform="translate(10,6)">
+    <!-- Bowl -->
+    <path d="M18 4 Q6 22 10 38 Q14 52 30 56 Q46 52 50 38 Q54 22 42 4 Z"
+          fill="#8B1A1A" opacity="0.92"/>
+    <!-- Shine -->
+    <ellipse cx="24" cy="20" rx="4" ry="9" fill="white" opacity="0.18" transform="rotate(-15,24,20)"/>
+    <!-- Stem -->
+    <rect x="28" y="56" width="4" height="22" rx="2" fill="#6B1010" opacity="0.85"/>
+    <!-- Base -->
+    <ellipse cx="30" cy="80" rx="16" ry="4" fill="#6B1010" opacity="0.75"/>
+  </g>
+  <!-- Text block -->
+  <text x="78" y="46" font-family="Georgia, serif" font-size="34"
+        font-weight="bold" fill="#2C0A0A" letter-spacing="1">Gira M19</text>
+  <text x="80" y="68" font-family="Georgia, serif" font-size="15"
+        fill="#7A2020" letter-spacing="2">Simulador de Ventas</text>
+  <!-- Decorative line -->
+  <line x1="78" y1="74" x2="380" y2="74" stroke="#8B1A1A" stroke-width="1.5" opacity="0.35"/>
+</svg>
+"""
+
+st.markdown(LOGO_SVG, unsafe_allow_html=True)
 st.markdown("Estimá cuántas unidades vas a vender de cada producto y calculá tus ganancias al instante.")
 st.divider()
 
