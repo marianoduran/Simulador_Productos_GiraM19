@@ -12,17 +12,17 @@ st.set_page_config(
 
 # ── Datos de productos ───────────────────────────────────────────────────────
 PRODUCTOS = [
-    {"Categoría": "Vino",         "Descripción": "Toia/blen",           "Presentación": "Gama media",       "Costo": 6500,  "Precio Venta": 11500, "Margen": 5000},
-    {"Categoría": "Vino",         "Descripción": "Gran Toia",           "Presentación": "Gama alta",        "Costo": 10000, "Precio Venta": 20000, "Margen": 10000},
-    {"Categoría": "Cerveza",      "Descripción": "Peroni",              "Presentación": "Gama alta",        "Costo": 2500,  "Precio Venta": 4500,  "Margen": 2000},
-    {"Categoría": "Aceite de oliva","Descripción": "Oda",               "Presentación": "Vidrio 1/2 litro", "Costo": 7500,  "Precio Venta": 14000, "Margen": 6500},
-    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "12 unidades",      "Costo": 11378, "Precio Venta": 20000, "Margen": 8622},
-    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "10 u. en bolsita", "Costo": 7375,  "Precio Venta": 11800, "Margen": 4425},
-    {"Categoría": "Alfajores",    "Descripción": "Alfapampa",           "Presentación": "6 unidades",       "Costo": 6040,  "Precio Venta": 10600, "Margen": 4560},
-    {"Categoría": "Alfajores",    "Descripción": "Barritas cereal Prot","Presentación": "Unidad",           "Costo": 982,   "Precio Venta": 1600,  "Margen": 618},
-    {"Categoría": "Alfajores",    "Descripción": "Barritas cereal",     "Presentación": "Unidad",           "Costo": 682,   "Precio Venta": 1200,  "Margen": 518},
-    {"Categoría": "Aceitunas",    "Descripción": "Aceitunas Verdes",    "Presentación": "Env. 1/2",         "Costo": 9286,  "Precio Venta": 13500, "Margen": 4214},
-    {"Categoría": "Aceitunas",    "Descripción": "Aceitunas Negras",    "Presentación": "Env. 1/2",         "Costo": 10500, "Precio Venta": 15900, "Margen": 5400},
+    {"Categoría": "Vino",           "Descripción": "Toia/blen",           "Presentación": "Gama media x 6 u.",  "Costo": 39000, "Precio Venta": 69000,  "Margen": 30000},
+    {"Categoría": "Vino",           "Descripción": "Gran Toia",           "Presentación": "Gama alta x 6 u.",   "Costo": 60000, "Precio Venta": 120000, "Margen": 60000},
+    {"Categoría": "Cerveza",        "Descripción": "Peroni",              "Presentación": "Gama alta x 24 u.",  "Costo": 60000, "Precio Venta": 108000, "Margen": 48000},
+    {"Categoría": "Aceite de oliva","Descripción": "Oda",                 "Presentación": "Vidrio 1/2 litro",   "Costo": 7500,  "Precio Venta": 14000,  "Margen": 6500},
+    {"Categoría": "Alfajores",      "Descripción": "Alfapampa",           "Presentación": "12 unidades",        "Costo": 11378, "Precio Venta": 20000,  "Margen": 8622},
+    {"Categoría": "Alfajores",      "Descripción": "Alfapampa",           "Presentación": "10 u. en bolsita",   "Costo": 7375,  "Precio Venta": 11800,  "Margen": 4425},
+    {"Categoría": "Alfajores",      "Descripción": "Alfapampa",           "Presentación": "6 unidades",         "Costo": 6040,  "Precio Venta": 10600,  "Margen": 4560},
+    {"Categoría": "Alfajores",      "Descripción": "Barritas cereal Prot","Presentación": "Unidad",             "Costo": 982,   "Precio Venta": 1600,   "Margen": 618},
+    {"Categoría": "Alfajores",      "Descripción": "Barritas cereal",     "Presentación": "Unidad",             "Costo": 682,   "Precio Venta": 1200,   "Margen": 518},
+    {"Categoría": "Aceitunas",      "Descripción": "Aceitunas Verdes",    "Presentación": "Env. 1/2",           "Costo": 9286,  "Precio Venta": 13500,  "Margen": 4214},
+    {"Categoría": "Aceitunas",      "Descripción": "Aceitunas Negras",    "Presentación": "Env. 1/2",           "Costo": 10500, "Precio Venta": 15900,  "Margen": 5400},
 ]
 
 df_base = pd.DataFrame(PRODUCTOS)
