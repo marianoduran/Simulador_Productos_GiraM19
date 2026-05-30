@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import requests
+from datetime import datetime, timezone
 
 # ── Configuración de página ──────────────────────────────────────────────────
 st.set_page_config(
@@ -25,6 +27,26 @@ PRODUCTOS = [
 
 df_base = pd.DataFrame(PRODUCTOS)
 
+# ── Cotización desde dolarapi.com ────────────────────────────────────────────
+TIPOS_DOLAR = {
+    "Oficial":                  "oficial",
+    "Blue":                     "blue",
+    "Bolsa (MEP)":              "bolsa",
+    "Contado con Liquidación":  "contadoconliqui",
+    "Mayorista":                "mayorista",
+    "Cripto":                   "cripto",
+    "Tarjeta":                  "tarjeta",
+}
+
+@st.cache_data(ttl=300)   # refresca cada 5 minutos
+def fetch_cotizaciones():
+    try:
+        r = requests.get("https://dolarapi.com/v1/dolares", timeout=5)
+        r.raise_for_status()
+        return {d["casa"]: d for d in r.json()}
+    except Exception:
+        return {}
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 def fmt_ars(v):
     """Formato ARS: $ 1.234.567"""
@@ -40,16 +62,48 @@ st.markdown("Estimá cuántas unidades vas a vender de cada producto y calculá 
 st.divider()
 
 # ── Cotización USD ───────────────────────────────────────────────────────────
-col_usd, _ = st.columns([1, 3])
-with col_usd:
+cotizaciones = fetch_cotizaciones()
+
+col_tipo, col_val, col_btn, _ = st.columns([1.2, 1, 0.6, 2])
+
+with col_tipo:
+    tipo_label = st.selectbox(
+        "💵 Tipo de dólar",
+        options=list(TIPOS_DOLAR.keys()),
+        index=1,   # Blue por defecto
+    )
+
+casa_key = TIPOS_DOLAR[tipo_label]
+dato = cotizaciones.get(casa_key, {})
+valor_api = dato.get("venta") or dato.get("compra") or 1200.0
+
+with col_val:
     tipo_cambio = st.number_input(
-        "💵 Cotización USD → ARS",
+        "Cotización (ARS)",
         min_value=1.0,
-        value=1200.0,
+        value=float(valor_api),
         step=10.0,
         format="%.2f",
-        help="Ingresá el tipo de cambio para ver los totales también en dólares",
+        help="Se carga automáticamente desde dolarapi.com. Podés editarlo manualmente.",
     )
+
+with col_btn:
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔄 Actualizar"):
+        st.cache_data.clear()
+        st.rerun()
+
+# Info de última actualización
+if dato.get("fechaActualizacion"):
+    try:
+        dt = datetime.fromisoformat(dato["fechaActualizacion"].replace("Z", "+00:00"))
+        dt_local = dt.astimezone()
+        st.caption(f"Fuente: dolarapi.com · Última actualización: {dt_local.strftime('%d/%m/%Y %H:%M')} hs")
+    except Exception:
+        st.caption("Fuente: dolarapi.com")
+elif not cotizaciones:
+    st.warning("⚠️ No se pudo obtener la cotización en línea. Editá el valor manualmente.")
+
 st.divider()
 
 # ── Tabla de productos con cantidades ────────────────────────────────────────
