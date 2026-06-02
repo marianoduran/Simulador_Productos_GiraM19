@@ -12,14 +12,14 @@ st.set_page_config(
 
 # ── Datos de productos ───────────────────────────────────────────────────────
 PRODUCTOS = [
-    {"Categoría": "Vino",           "Descripción": "Toia/blen",              "Presentación": "Gama media x 6 u.",         "Costo": 39000,  "Precio Venta": 69000,  "Margen": 30000},
-    {"Categoría": "Vino",           "Descripción": "Gran Toia",              "Presentación": "Gama alta x 6 u.",          "Costo": 60000,  "Precio Venta": 120000, "Margen": 60000},
+    {"Categoría": "Vino",           "Descripción": "Toia/blen",              "Presentación": "Gama media x 6 u.",         "Costo": 39000,  "Precio Venta": 69500,  "Margen": 30500},
+    {"Categoría": "Vino",           "Descripción": "Gran Toia",              "Presentación": "Gama alta x 4 u.",          "Costo": 40000,  "Precio Venta": 80000,  "Margen": 40000},
     {"Categoría": "Cerveza",        "Descripción": "Peroni",                 "Presentación": "Gama alta x 24 u.",         "Costo": 60000,  "Precio Venta": 108000, "Margen": 48000},
     {"Categoría": "Aceite de oliva","Descripción": "Oda",                    "Presentación": "Vidrio 1/2 litro",          "Costo": 7500,   "Precio Venta": 14000,  "Margen": 6500},
     {"Categoría": "Alfajores",      "Descripción": "Alfapampa",              "Presentación": "12 u. x 9 cajas",           "Costo": 102402, "Precio Venta": 180000, "Margen": 77598},
     {"Categoría": "Alfajores",      "Descripción": "Alfapampa",              "Presentación": "10 u. en bolsita x 8 cajas","Costo": 59000,  "Precio Venta": 94400,  "Margen": 35400},
     {"Categoría": "Alfajores",      "Descripción": "Alfapampa",              "Presentación": "6 u. x 10 cajas",           "Costo": 60400,  "Precio Venta": 106000, "Margen": 45600},
-    {"Categoría": "Alfajores",      "Descripción": "Barritas cereal Prot",   "Presentación": "12 u. x 6 cajas",           "Costo": 70700,  "Precio Venta": 113400, "Margen": 42700},
+    {"Categoría": "Alfajores",      "Descripción": "Barritas cereal Proteicas","Presentación": "12 u. x 6 cajas",           "Costo": 70700,  "Precio Venta": 113400, "Margen": 42700},
     {"Categoría": "Alfajores",      "Descripción": "Barritas cereal",        "Presentación": "18 u. x 4 cajas",           "Costo": 49100,  "Precio Venta": 83520,  "Margen": 34420},
     {"Categoría": "Aceitunas",      "Descripción": "Aceitunas Verdes",       "Presentación": "1/2 kg x 14 envases",       "Costo": 130200, "Precio Venta": 189000, "Margen": 58800},
     {"Categoría": "Aceitunas",      "Descripción": "Aceitunas Negras",       "Presentación": "1/2 kg x 14 envases",       "Costo": 147000, "Precio Venta": 222600, "Margen": 75600},
